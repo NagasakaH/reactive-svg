@@ -2,7 +2,8 @@
 
 ## 概要
 
-draw.ioで作成したsvgを動的に動かすためのライブラリ
+draw.ioで作成したsvgを動的に動かすためのライブラリ  
+[サンプルサイト]("https://nagasakah.github.io/reactive-svg-sample/")
 
 ## 使い方
 
@@ -13,17 +14,14 @@ npm install @nagasakah/reactive-svg
 ```
 
 2. draw.ioで図を作成してSVGとして出力する(例ではtest.drawio.svgとして出力)  
+
 ※svgdataプラグインが有効になっていること  
 四角形を作成=>図形を選択=>Edit Data=>IDにnameを入力=>任意のPropertyを入力してApplyを押下  
 ![](images/drawio.drawio.png)
-1. public/md/配下に表示させいたいmarkdownファイルを配置(例: helloworld.mdを下記の内容で作成)
 
-```markdown
-# Hello World
-hello world
-```
+3. public/md/配下に表示させたいmarkdownファイルを配置(例: helloworld.md)
 
-1. Reactの場合
+4. Reactの場合
 
 ```tsx
 import React, { useEffect, useRef } from "react";
