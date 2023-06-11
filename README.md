@@ -3,7 +3,7 @@
 ## 概要
 
 draw.ioで作成したsvgを動的に動かすためのライブラリ  
-[サンプルサイト]("https://nagasakah.github.io/reactive-svg-sample/")
+[サンプルサイト](https://nagasakah.github.io/reactive-svg-sample/)
 
 ## 使い方
 
