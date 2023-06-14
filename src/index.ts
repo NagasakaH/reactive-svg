@@ -149,7 +149,7 @@ function openOverlay(props: openOverlayProps) {
         let replacedText = text;
         if (props.replacementCandidates) {
           for (const replacementCandidate of props.replacementCandidates) {
-            replacedText = replacedText.replace(
+            replacedText = replacedText.replaceAll(
               replacementCandidate.from,
               replacementCandidate.to
             );
