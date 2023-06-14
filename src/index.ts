@@ -6,6 +6,7 @@ import './overlay.css';
 export type reactiveSVGEvent = {
   name: string;
   markdownFile?: string;
+  replacementCandidates?: reactiveSVGReplacementPair[];
   additionalHTMLContent?: string;
   callback?: () => void;
   animation?: boolean;
@@ -37,10 +38,17 @@ export function loadSettings(
   for (const event of settings.events) {
     const onClick = async () => {
       if (event.markdownFile) {
+        const replacementCandidates = new Array<reactiveSVGReplacementPair>();
+        if (settings.replacementCandidates) {
+          replacementCandidates.concat(settings.replacementCandidates);
+        }
+        if (event.replacementCandidates) {
+          replacementCandidates.concat(event.replacementCandidates);
+        }
         openOverlay({
           markdownFile: settings.baseURL + event.markdownFile,
           additionalHTMLContent: event.additionalHTMLContent,
-          replacementCandidates: settings.replacementCandidates,
+          replacementCandidates: replacementCandidates,
         });
       }
       if (event.callback) {
