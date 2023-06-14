@@ -38,12 +38,16 @@ export function loadSettings(
   for (const event of settings.events) {
     const onClick = async () => {
       if (event.markdownFile) {
-        const replacementCandidates = new Array<reactiveSVGReplacementPair>();
+        let replacementCandidates = new Array<reactiveSVGReplacementPair>();
         if (settings.replacementCandidates) {
-          replacementCandidates.concat(settings.replacementCandidates);
+          replacementCandidates = replacementCandidates.concat(
+            settings.replacementCandidates
+          );
         }
         if (event.replacementCandidates) {
-          replacementCandidates.concat(event.replacementCandidates);
+          replacementCandidates = replacementCandidates.concat(
+            event.replacementCandidates
+          );
         }
         openOverlay({
           markdownFile: settings.baseURL + event.markdownFile,
