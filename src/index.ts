@@ -130,6 +130,7 @@ function openOverlay(props: openOverlayProps) {
   const obj = document.getElementById('overlay');
   const content = document.getElementById('overlayContent');
   if (obj && content) {
+    obj.style.display = 'block';
     disableBodyScroll(obj);
     if (props.markdownFile) {
       loadStaticFile(props.markdownFile).then(text => {
@@ -156,6 +157,7 @@ function openOverlay(props: openOverlayProps) {
 function closeOverlay() {
   const obj = document.getElementById('overlay');
   if (obj) {
+    obj.style.display = 'none';
     enableBodyScroll(obj);
   }
 }
