@@ -1,14 +1,26 @@
 import {marked} from 'marked';
-import chroma = require('chroma-js');
+import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
+import chroma from 'chroma-js';
 import './overlay.css';
 
-type event = {
+export type reactiveSVGEvent = {
   name: string;
   markdownFile?: string;
   additionalHTMLContent?: string;
+  callback?: () => void;
+  animation?: boolean;
 };
 
-export type reactiveSVGSettings = {baseURL: string; events: event[]};
+export type reactiveSVGReplacementPair = {
+  from: RegExp;
+  to: string;
+};
+
+export type reactiveSVGSettings = {
+  baseURL: string;
+  events: reactiveSVGEvent[];
+  replacementCandidates?: reactiveSVGReplacementPair[];
+};
 
 async function loadStaticFile(filePath: string) {
   const res = await fetch(filePath);
@@ -24,12 +36,18 @@ export function loadSettings(
 ) {
   for (const event of settings.events) {
     const onClick = async () => {
-      openOverlay({
-        markdownFile: settings.baseURL + event.markdownFile,
-        additionalHTMLContent: event.additionalHTMLContent,
-      });
+      if (event.markdownFile) {
+        openOverlay({
+          markdownFile: settings.baseURL + event.markdownFile,
+          additionalHTMLContent: event.additionalHTMLContent,
+          replacementCandidates: settings.replacementCandidates,
+        });
+      }
+      if (event.callback) {
+        event.callback();
+      }
     };
-    addEventToRectangle(ref, event.name, onClick);
+    addEventToRectangle(ref, event.name, onClick, event.animation);
   }
 
   // overlayが存在しない場合は生成する
@@ -64,7 +82,8 @@ export function loadSettings(
 function addEventToRectangle(
   ref: SVGSVGElement,
   name: string,
-  click: () => void
+  click: () => void,
+  animation: boolean | undefined
 ) {
   if (ref) {
     const nodes = Array.from(
@@ -78,44 +97,52 @@ function addEventToRectangle(
       }
       node.removeEventListener('click', click);
       node.addEventListener('click', click);
-      node.addEventListener('mouseover', () => {
-        console.log('mouseover');
-        for (let i = 0; i < node.children.length; i++) {
-          const child = node.children[i];
-          const color = originalColors[i];
-          if (child.tagName === 'rect' && color) {
-            const newColor = chroma(color).darken().hex();
-            child.setAttribute('fill', newColor);
+      if (animation) {
+        node.addEventListener('mouseover', () => {
+          for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            const color = originalColors[i];
+            if (child.tagName === 'rect' && color) {
+              const newColor = chroma(color).darken().hex();
+              child.setAttribute('fill', newColor);
+            }
           }
-        }
-      });
-      node.addEventListener('mouseout', () => {
-        console.log('mouseout');
-        for (let i = 0; i < node.children.length; i++) {
-          const child = node.children[i];
-          if (child.tagName === 'rect') {
-            const newColor = originalColors[i];
-            child.setAttribute('fill', newColor ? newColor : '#000000');
+        });
+        node.addEventListener('mouseout', () => {
+          for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            if (child.tagName === 'rect') {
+              const newColor = originalColors[i];
+              child.setAttribute('fill', newColor ? newColor : '#000000');
+            }
           }
-        }
-      });
+        });
+      }
     }
   }
 }
 type openOverlayProps = {
   markdownFile: string | undefined;
   additionalHTMLContent?: string | undefined;
+  replacementCandidates?: reactiveSVGReplacementPair[];
 };
 function openOverlay(props: openOverlayProps) {
   const obj = document.getElementById('overlay');
   const content = document.getElementById('overlayContent');
-  const body = document.body;
   if (obj && content) {
-    obj.style.display = 'block';
-    body.style.overflow = 'hidden';
+    disableBodyScroll(obj);
     if (props.markdownFile) {
       loadStaticFile(props.markdownFile).then(text => {
-        const parsedText = marked(text);
+        let replacedText = text;
+        if (props.replacementCandidates) {
+          for (const replacementCandidate of props.replacementCandidates) {
+            replacedText = replacedText.replace(
+              replacementCandidate.from,
+              replacementCandidate.to
+            );
+          }
+        }
+        const parsedText = marked(replacedText);
         if (props.additionalHTMLContent) {
           content.innerHTML = parsedText + props.additionalHTMLContent;
         } else {
@@ -128,9 +155,7 @@ function openOverlay(props: openOverlayProps) {
 
 function closeOverlay() {
   const obj = document.getElementById('overlay');
-  const body = document.body;
   if (obj) {
-    obj.style.display = 'none';
-    body.style.overflow = 'auto';
+    enableBodyScroll(obj);
   }
 }

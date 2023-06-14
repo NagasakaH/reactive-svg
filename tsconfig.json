@@ -7,7 +7,8 @@
     "declaration": true,
     "outDir": "./build/",
     "strict": true,
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "plugins": [{"name": "typescript-plugin-css-modules"}],
+    "esModuleInterop": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"]
