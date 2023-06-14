@@ -97,7 +97,7 @@ function addEventToRectangle(
       }
       node.removeEventListener('click', click);
       node.addEventListener('click', click);
-      if (animation) {
+      if (animation === undefined || animation === true) {
         node.addEventListener('mouseover', () => {
           for (let i = 0; i < node.children.length; i++) {
             const child = node.children[i];
