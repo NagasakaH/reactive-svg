@@ -1,3 +1,4 @@
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 module.exports = {
   mode: 'development',
@@ -29,4 +30,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {from: 'build/index.d.ts', to: './'},
+        {from: 'build/index.js.map', to: './'},
+      ],
+    }),
+  ],
 };
