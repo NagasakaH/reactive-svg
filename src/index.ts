@@ -1,7 +1,20 @@
 import {marked} from 'marked';
+import {markedHighlight} from 'marked-highlight';
+import hljs from 'highlight.js';
 import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
 import chroma from 'chroma-js';
 import './overlay.css';
+
+// marked設定
+marked.use(
+  markedHighlight({
+    langPrefix: 'hljs language-',
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, {language}).value;
+    },
+  })
+);
 
 export type reactiveSVGEvent = {
   name: string;
@@ -133,11 +146,13 @@ function addEventToRectangle(
     }
   }
 }
+
 type openOverlayProps = {
   markdownFile: string | undefined;
   additionalHTMLContent?: string | undefined;
   replacementCandidates?: reactiveSVGReplacementPair[];
 };
+
 function openOverlay(props: openOverlayProps) {
   const obj = document.getElementById('overlay');
   const content = document.getElementById('overlayContent');
@@ -155,7 +170,7 @@ function openOverlay(props: openOverlayProps) {
             );
           }
         }
-        const parsedText = marked(replacedText);
+        const parsedText = marked(replacedText, {mangle: false});
         if (props.additionalHTMLContent) {
           content.innerHTML = parsedText + props.additionalHTMLContent;
         } else {

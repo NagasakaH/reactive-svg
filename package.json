@@ -1,6 +1,6 @@
 {
   "name": "@nagasakah/reactive-svg",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -47,6 +47,8 @@
     "@types/marked": "^5.0.0",
     "body-scroll-lock": "^4.0.0-beta.0",
     "chroma-js": "^2.4.2",
-    "marked": "^5.1.0"
+    "highlight.js": "^11.8.0",
+    "marked": "^5.1.0",
+    "marked-highlight": "^2.0.1"
   }
 }
