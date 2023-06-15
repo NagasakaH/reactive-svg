@@ -4,6 +4,7 @@ import hljs from 'highlight.js';
 import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
 import chroma from 'chroma-js';
 import './overlay.css';
+import 'highlight.js/styles/default.css';
 
 // marked設定
 marked.use(
@@ -170,7 +171,10 @@ function openOverlay(props: openOverlayProps) {
             );
           }
         }
-        const parsedText = marked(replacedText, {mangle: false});
+        const parsedText = marked(replacedText, {
+          mangle: false,
+          headerIds: false,
+        });
         if (props.additionalHTMLContent) {
           content.innerHTML = parsedText + props.additionalHTMLContent;
         } else {
