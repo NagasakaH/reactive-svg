@@ -1,9 +1,9 @@
 {
   "name": "@nagasakah/reactive-svg",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/reactiveSVG.js",
+  "types": "dist/reactiveSVG.d.ts",
   "files": [
     "dist",
     "src"

@@ -1,14 +1,17 @@
-const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 module.exports = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: './src/reactiveSVG.ts',
   output: {
-    filename: 'index.js',
+    filename: 'reactiveSVG.js',
     path: path.resolve(__dirname, 'dist'),
     library: 'reactiveSvg',
     libraryTarget: 'umd',
     globalObject: "typeof self !== 'undefined' ? self : this",
+  },
+  devtool: 'source-map',
+  optimization: {
+    minimize: true,
   },
   resolve: {
     extensions: ['.ts', '.js', '.css'],
@@ -30,12 +33,4 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        {from: 'build/index.d.ts', to: './'},
-        {from: 'build/index.js.map', to: './'},
-      ],
-    }),
-  ],
 };
